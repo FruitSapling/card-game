@@ -1,5 +1,3 @@
-import javax.swing.table.TableRowSorter;
-import javax.xml.stream.FactoryConfigurationError;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,7 +15,27 @@ public class Player {
     }
 
     public boolean hasWinningDeck() {
-        return false;
+        boolean won = true;
+        int cardCollecting = 0;
+
+        if (cards.size() == 4) {
+            for (Card card:cards) {
+                if (cardCollecting != 0) {
+                    if (card.getValue() != cardCollecting) {
+                        won = false;
+                    }
+                }
+                else {
+                    cardCollecting = card.getValue();
+                }
+            }
+        }
+        else {
+            won = false;
+        }
+
+
+        return won;
     }
 
 

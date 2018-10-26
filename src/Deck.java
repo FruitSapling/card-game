@@ -18,11 +18,14 @@ public class Deck {
 
         for(Card card : cardsInDeck) {
             if (card.getValue() == preferedValue) {
+                cardsInDeck.remove(card);
                 return card;
             }
         }
 
-        return cardsInDeck.get(0);
+        Card removedCard = cardsInDeck.get(0);
+        cardsInDeck.remove(0);
+        return removedCard;
     }
 
 }
