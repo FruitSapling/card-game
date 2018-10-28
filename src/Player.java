@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Player {
+public class Player implements Runnable{
 
     private ArrayList<Card> cards = new ArrayList<>();
     private int playerNumber;
@@ -12,6 +12,14 @@ public class Player {
         this.playerNumber = playerNumber;
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
+    }
+
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName());
+        for (Card card:cards) {
+            System.out.println(card.getValue());
+        }
     }
 
     public boolean hasWinningDeck() {
@@ -36,6 +44,16 @@ public class Player {
 
 
         return won;
+    }
+
+    public boolean addCard(Card card) {
+        if (cards.size() < 4) {
+            cards.add(card);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 
