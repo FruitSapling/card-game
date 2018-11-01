@@ -121,7 +121,7 @@ public class CardGameOld {
                 msg = "Couldn't find file. Enter a valid file location: ";
             }
             else {
-                gameMain = new CardGame(file,numberOfPlayers);
+                gameMain = new CardGameOld(file,numberOfPlayers);
                 try {
                     gameMain.readFile();
                 }
