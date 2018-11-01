@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class CardGame {
 
-    private static int getNumPlayers() {
+    public static int getNumPlayers() {
         String errorMessage = "Please enter a valid number of players (1 to n, where n is a positive integer).";
 
         Scanner scanner = new Scanner(System.in);
@@ -20,12 +20,14 @@ public class CardGame {
             return numberOfPlayers;
         } else {
             System.out.println(errorMessage);
-            return getNumPlayers()
+            return getNumPlayers();
         }
     }
 
-    public static void main(String[] args) {
+    private static int getPack
 
+    public static void main(String[] args) {
         getNumPlayers();
+
     }
 }
