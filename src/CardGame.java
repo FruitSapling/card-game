@@ -35,6 +35,8 @@ public class CardGame {
 
         try {
             packFile = new File(scanner.nextLine());
+            System.out.println(packFile.getAbsoluteFile());
+
         } catch (Exception e) {
             System.out.println(errorMessage);
             return getPack(numberOfPlayers);
@@ -51,8 +53,14 @@ public class CardGame {
             while (reader.ready()) {
                 String str = reader.readLine();
                 if (str != null) {
-                    cards[cardIndex] = new Card(Integer.parseInt(str));
-                    cardIndex++;
+                    int cardValue = Integer.parseInt(str);
+                    if (cardValue >  0 && cardValue <= numberOfPlayers) {
+                        cards[cardIndex] = new Card(cardValue);
+                        cardIndex++;
+                    } else {
+                        throw new Exception();
+                    }
+
                 }
                 else {
                     reader.close();
@@ -60,7 +68,6 @@ public class CardGame {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println("There was an error while parsing your file. " +
                     "Please ensure it is a text file with 8n lines, each " +
                     "containing a positive integer between 0 and n.");
@@ -71,6 +78,7 @@ public class CardGame {
     }
 
     public static void main(String[] args) {
+        System.out.println(new File(".").getAbsoluteFile());
         int numberOfPlayers = getNumPlayers();
         Card[] pack = getPack(numberOfPlayers);
     }
