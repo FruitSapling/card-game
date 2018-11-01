@@ -15,7 +15,7 @@ public class DeckTest {
     }
 
     @Test
-    public void testRemoveCardWithoutPerferedValue() {
+    public void testRemoveCardWithoutPreferredValue() {
         Card card1 = new Card(3);
         Card card2 = new Card(2);
         Card card3 = new Card(3);
@@ -27,7 +27,7 @@ public class DeckTest {
     }
 
     @Test
-    public void testRemoveCardWithPreferedValue() {
+    public void testRemoveCardWithPreferredValue() {
         Card card1 = new Card(1);
         Card card2 = new Card(2);
         Card card3 = new Card(3);
