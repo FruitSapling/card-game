@@ -40,7 +40,7 @@ public class CardGame {
             return getPack(numberOfPlayers);
         }
 
-        Card[] cards = new Card[numberOfPlayers];
+        Card[] cards = new Card[numberOfPlayers*8];
 
         int cardIndex = 0;
 
