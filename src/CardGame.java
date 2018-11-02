@@ -128,6 +128,6 @@ public class CardGame {
         cardGame.decks = cardGame.getDecks();
         cardGame.players = cardGame.getPlayers();
         cardGame.dealCards();
-        
+
     }
 }
