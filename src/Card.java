@@ -10,9 +10,9 @@ public class Card {
         return value;
     }
 
-    @Override
-    public String toString() {
-        return String.valueOf(this.getValue());
-    }
+//    @Override
+//    public String toString() {
+//        return String.valueOf(this.getValue());
+//    }
 
 }
