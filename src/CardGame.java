@@ -4,7 +4,12 @@ import java.util.Scanner;
 
 public class CardGame {
 
-    public static int getNumPlayers() {
+    public int numberOfPlayers;
+    public Card[] pack;
+    public Player[] players;
+    public Deck[] decks;
+
+    public int getNumPlayers() {
         String errorMessage = "Please enter a valid number of players (1 to n, where n is a positive integer).";
 
         Scanner scanner = new Scanner(System.in);
@@ -24,7 +29,7 @@ public class CardGame {
         }
     }
 
-    private static Card[] getPack(int numberOfPlayers) {
+    private Card[] getPack() {
         String errorMessage = "Please enter a valid path name to the pack file.";
 
         System.out.print("File path of pack file: ");
@@ -39,47 +44,90 @@ public class CardGame {
 
         } catch (Exception e) {
             System.out.println(errorMessage);
-            return getPack(numberOfPlayers);
+            return getPack();
         }
 
         Card[] cards = new Card[numberOfPlayers*8];
-
-        int cardIndex = 0;
 
         try {
             FileReader instream = new FileReader(packFile);
             BufferedReader reader = new BufferedReader(instream);
 
-            while (reader.ready()) {
+            for (int i = 0; i < numberOfPlayers*8; i++) {
                 String str = reader.readLine();
-                if (str != null) {
-                    int cardValue = Integer.parseInt(str);
-                    if (cardValue >  0 && cardValue <= numberOfPlayers) {
-                        cards[cardIndex] = new Card(cardValue);
-                        cardIndex++;
-                    } else {
-                        throw new Exception();
-                    }
-
-                }
-                else {
-                    reader.close();
-                    instream.close();
+                System.out.println(str);
+                int cardValue = Integer.parseInt(str);
+                if (cardValue >  0 && cardValue <= numberOfPlayers) {
+                    cards[i] = new Card(cardValue);
+                } else {
+                    throw new Exception();
                 }
             }
+
+            // if we have looped through 8*numberOfPlayers cards, and the
+            // reader is still ready, then there are too many cards in
+            // the file
+            if (reader.ready()) {
+                throw new Exception();
+            }
+
+            reader.close();
+            instream.close();
+
         } catch (Exception e) {
             System.out.println("There was an error while parsing your file. " +
                     "Please ensure it is a text file with 8n lines, each " +
                     "containing a positive integer between 0 and n.");
-            return getPack(numberOfPlayers);
+            return getPack();
         }
 
         return cards;
     }
 
+    public Deck[] getDecks() {
+        decks = new Deck[numberOfPlayers];
+        for (int i = 0; i < numberOfPlayers; i++) {
+            decks[i] = new Deck();
+        }
+        return decks;
+    }
+
+    public Player[] getPlayers() {
+        players = new Player[numberOfPlayers];
+
+        for (int i = 0; i < numberOfPlayers-1; i++) {
+            players[i] = new Player(i+1, decks[i], decks[i+1]);
+        }
+        //last player instantiated here, to avoid indexOutOfBoundsError
+        players[numberOfPlayers-1] = new Player(numberOfPlayers,
+                decks[numberOfPlayers-1], decks[0]);
+
+        return players;
+    }
+
+    public void dealCards() {
+        try {
+            for (int i = 0; i < (numberOfPlayers * 4); i++) {
+                if (!players[i % numberOfPlayers].addCard(pack[i])) {
+                    throw new Exception();
+                }
+            }
+
+            for (int j = (numberOfPlayers * 4); j < (numberOfPlayers * 8); j++) {
+                decks[j % numberOfPlayers].addCard(pack[j]);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
-        System.out.println(new File(".").getAbsoluteFile());
-        int numberOfPlayers = getNumPlayers();
-        Card[] pack = getPack(numberOfPlayers);
+        CardGame cardGame = new CardGame();
+        cardGame.numberOfPlayers = cardGame.getNumPlayers();
+        cardGame.pack = cardGame.getPack();
+        cardGame.decks = cardGame.getDecks();
+        cardGame.players = cardGame.getPlayers();
+        cardGame.dealCards();
+        
     }
 }

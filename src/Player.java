@@ -6,7 +6,33 @@ public class Player implements Runnable{
     private ArrayList<Card> cards = new ArrayList<>();
     private int playerNumber;
 
-    private Deck leftDeck, rightDeck;
+    public Deck getLeftDeck() {
+        return leftDeck;
+    }
+
+    public void setLeftDeck(Deck leftDeck) {
+        this.leftDeck = leftDeck;
+    }
+
+    private Deck leftDeck;
+
+    public Deck getRightDeck() {
+        return rightDeck;
+    }
+
+    public void setRightDeck(Deck rightDeck) {
+        this.rightDeck = rightDeck;
+    }
+
+    private Deck rightDeck;
+
+    public ArrayList<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
+    }
 
     public Player(int playerNumber, Deck leftDeck, Deck rightDeck) {
         this.playerNumber = playerNumber;

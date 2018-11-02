@@ -4,10 +4,17 @@ import java.util.List;
 
 public class Deck {
 
+    public ArrayList<Card> getCardsInDeck() {
+        return cardsInDeck;
+    }
+
+    public void setCardsInDeck(ArrayList<Card> cardsInDeck) {
+        this.cardsInDeck = cardsInDeck;
+    }
+
     private ArrayList<Card> cardsInDeck = new ArrayList<>();
 
     public Deck() {}
-
 
     public void addCard(Card card) {
         this.cardsInDeck.add(card);
