@@ -46,6 +46,20 @@ public class Player implements Runnable{
         for (Card card:cards) {
             System.out.println(card.getValue());
         }
+
+        checkDeck();
+
+    }
+
+    public synchronized void checkDeck() {
+        if (hasWinningDeck()) {
+            System.out.println(Thread.currentThread().getName() + " winner");
+            System.exit(0);
+        }
+        else {
+            System.out.println(Thread.currentThread().getName() + " not winner");
+            this.notifyAll();
+        }
     }
 
     public boolean hasWinningDeck() {
