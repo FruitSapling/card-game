@@ -39,7 +39,8 @@ public class CardGame {
         File packFile;
 
         try {
-            packFile = new File(scanner.nextLine());
+            //packFile = new File(scanner.nextLine());
+            packFile = new File("C:/Users/bobby/Documents/University/Year 2/ECM2414 - Software Development/CA/card-game/src/Assets/packFile2.txt");
             System.out.println(packFile.getAbsoluteFile());
 
         } catch (Exception e) {
@@ -55,7 +56,7 @@ public class CardGame {
 
             for (int i = 0; i < numberOfPlayers*8; i++) {
                 String str = reader.readLine();
-                System.out.println(str);
+                //System.out.println(str);
                 int cardValue = Integer.parseInt(str);
                 if (cardValue >  0 && cardValue <= numberOfPlayers) {
                     cards[i] = new Card(cardValue);
@@ -67,7 +68,7 @@ public class CardGame {
             // if we have looped through 8*numberOfPlayers cards, and the
             // reader is still ready, then there are too many cards in
             // the file
-            if (reader.ready()) {
+            if (reader.readLine() != null) {
                 throw new Exception();
             }
 
@@ -121,6 +122,27 @@ public class CardGame {
         }
     }
 
+
+    public void startGame() {
+        try {
+            for (int i = 0; i < numberOfPlayers; i++) {
+                Thread thread = new Thread(players[i]);
+                thread.start();
+                synchronized (players[i]) {
+                    players[i].wait();
+                }
+
+            }
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
     public static void main(String[] args) {
         CardGame cardGame = new CardGame();
         cardGame.numberOfPlayers = cardGame.getNumPlayers();
@@ -129,5 +151,7 @@ public class CardGame {
         cardGame.players = cardGame.getPlayers();
         cardGame.dealCards();
 
+
+        cardGame.startGame();
     }
 }
