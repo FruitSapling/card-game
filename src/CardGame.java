@@ -29,18 +29,23 @@ public class CardGame {
         }
     }
 
+    public void interruptPlayers() {
+        for (Player p: players) {
+            p.running = false;
+        }
+    }
+
     private Card[] getPack() {
         String errorMessage = "Please enter a valid path name to the pack file.";
 
         System.out.print("File path of pack file: ");
         Scanner scanner = new Scanner(System.in);
 
-
         File packFile;
 
         try {
             //packFile = new File(scanner.nextLine());
-            packFile = new File("C:/Users/bobby/Documents/University/Year 2/ECM2414 - Software Development/CA/card-game/src/Assets/packFile2.txt");
+            packFile = new File("/Users/willem/Dropbox/Uni/Term 3/ECM2414 Software Development/CA/src/Assets/packFile.txt");
             System.out.println(packFile.getAbsoluteFile());
 
         } catch (Exception e) {
@@ -97,11 +102,11 @@ public class CardGame {
         players = new Player[numberOfPlayers];
 
         for (int i = 0; i < numberOfPlayers-1; i++) {
-            players[i] = new Player(i+1, decks[i], decks[i+1]);
+            players[i] = new Player(i+1, decks[i], decks[i+1], this);
         }
         //last player instantiated here, to avoid indexOutOfBoundsError
         players[numberOfPlayers-1] = new Player(numberOfPlayers,
-                decks[numberOfPlayers-1], decks[0]);
+                decks[numberOfPlayers-1], decks[0], this);
 
         return players;
     }
@@ -124,23 +129,13 @@ public class CardGame {
 
 
     public void startGame() {
-        try {
-            for (int i = 0; i < numberOfPlayers; i++) {
-                Thread thread = new Thread(players[i]);
-                thread.start();
-                synchronized (players[i]) {
-                    players[i].wait();
-                }
 
-            }
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
+        for (int i = 0; i < numberOfPlayers; i++) {
+            Thread thread = new Thread(players[i]);
+            thread.start();
+
         }
     }
-
-
-
 
 
     public static void main(String[] args) {
@@ -150,7 +145,6 @@ public class CardGame {
         cardGame.decks = cardGame.getDecks();
         cardGame.players = cardGame.getPlayers();
         cardGame.dealCards();
-
 
         cardGame.startGame();
     }

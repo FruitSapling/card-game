@@ -2,20 +2,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Deck {
 
-    public ArrayList<Card> getCardsInDeck() {
-        return cardsInDeck;
-    }
-
-    public void setCardsInDeck(ArrayList<Card> cardsInDeck) {
-        this.cardsInDeck = cardsInDeck;
-    }
-
+    public ReentrantLock deckLock;
     private ArrayList<Card> cardsInDeck = new ArrayList<>();
 
-    public Deck() {}
+    public Deck() {
+        deckLock = new ReentrantLock();
+    }
 
     public Deck(Card[] cards) {
         this.cardsInDeck = new ArrayList<Card> (Arrays.asList(cards));
@@ -26,11 +22,10 @@ public class Deck {
         this.cardsInDeck.add(card);
     }
 
-
-    public Card removeCard(int preferedValue) {
+    public Card removeCard(int preferredValue) {
 
         for(Card card : cardsInDeck) {
-            if (card.getValue() == preferedValue) {
+            if (card.getValue() == preferredValue) {
                 cardsInDeck.remove(card);
                 return card;
             }
@@ -41,13 +36,17 @@ public class Deck {
         return removedCard;
     }
 
-//    @Override
-//    public String toString() {
-//        String s = "Deck: ";
-//        for (Card c: cardsInDeck) {
-//            s += c.toString() + ",";
-//        }
-//        return s;
-//    }
+    public boolean hasCards() {
+        if (!this.cardsInDeck.isEmpty()) return true;
+        else return false;
+    }
+
+    public ArrayList<Card> getCardsInDeck() {
+        return cardsInDeck;
+    }
+
+    public void setCardsInDeck(ArrayList<Card> cardsInDeck) {
+        this.cardsInDeck = cardsInDeck;
+    }
 
 }

@@ -5,33 +5,15 @@ public class Player implements Runnable{
 
     private ArrayList<Card> cards = new ArrayList<>();
     private int playerNumber;
+    private Deck leftDeck, rightDeck;
+    private CardGame cardGame;
+    public volatile boolean running;
 
-    public Deck getLeftDeck() {
-        return leftDeck;
-    }
-
-    public void setLeftDeck(Deck leftDeck) {
+    public Player(int playerNumber, Deck leftDeck, Deck rightDeck, CardGame cardGame) {
+        this.playerNumber = playerNumber;
         this.leftDeck = leftDeck;
-    }
-
-    private Deck leftDeck;
-
-    public Deck getRightDeck() {
-        return rightDeck;
-    }
-
-    public void setRightDeck(Deck rightDeck) {
         this.rightDeck = rightDeck;
-    }
-
-    private Deck rightDeck;
-
-    public ArrayList<Card> getCards() {
-        return cards;
-    }
-
-    public void setCards(ArrayList<Card> cards) {
-        this.cards = cards;
+        this.cardGame = cardGame;
     }
 
     public Player(int playerNumber, Deck leftDeck, Deck rightDeck) {
@@ -42,46 +24,38 @@ public class Player implements Runnable{
 
     @Override
     public void run() {
-        System.out.println(Thread.currentThread().getName());
-        for (Card card:cards) {
-            System.out.println(card.getValue());
+        running = true;
+        while (running) {
+            if (leftDeck.hasCards()) {
+                System.out.println(this.playerNumber + "has cards!");
+                if (leftDeck.deckLock.tryLock()) {
+                    System.out.println(this.playerNumber + "got lock!" + leftDeck.deckLock.getHoldCount());
+                    drawCard();
+                    checkDeck();
+                    discardCard();
+                    leftDeck.deckLock.unlock();
+                } else System.out.println(this.playerNumber + "NO lock!");
+            }
         }
-
-        checkDeck();
-
     }
 
     public synchronized void checkDeck() {
         if (hasWinningDeck()) {
-            System.out.println(Thread.currentThread().getName() + " winner");
-            System.exit(0);
+            System.out.println(this.playerNumber + " has won");
+            cardGame.interruptPlayers();
         }
         else {
-            System.out.println(Thread.currentThread().getName() + " not winner");
             this.notifyAll();
         }
     }
 
     public boolean hasWinningDeck() {
-        boolean won = true;
-        int cardCollecting = 0;
-
-        if (cards.size() == 4) {
-            for (Card card:cards) {
-                if (cardCollecting != 0) {
-                    if (card.getValue() != cardCollecting) {
-                        won = false;
-                    }
-                }
-                else {
-                    cardCollecting = card.getValue();
-                }
-            }
+        boolean won = false;
+        int winningCardCount = 0;
+        for (Card c: cards) {
+            if (c.getValue() == this.playerNumber) winningCardCount+=1;
         }
-        else {
-            won = false;
-        }
-
+        if (winningCardCount>=4) won=true;
 
         return won;
     }
@@ -117,6 +91,31 @@ public class Player implements Runnable{
         rightDeck.addCard(cards.get(randInt));
         cards.remove(randInt);
 
+    }
+
+
+    public Deck getLeftDeck() {
+        return leftDeck;
+    }
+
+    public void setLeftDeck(Deck leftDeck) {
+        this.leftDeck = leftDeck;
+    }
+
+    public Deck getRightDeck() {
+        return rightDeck;
+    }
+
+    public void setRightDeck(Deck rightDeck) {
+        this.rightDeck = rightDeck;
+    }
+
+    public ArrayList<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
     }
 
 

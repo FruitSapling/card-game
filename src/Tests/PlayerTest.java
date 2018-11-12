@@ -6,6 +6,12 @@ import static org.junit.Assert.*;
 public class PlayerTest {
     Player player;
     Deck deckLeft,deckRight;
+    CardGame cardGame;
+
+    @Before
+    public void setup() {
+        cardGame = new CardGame();
+    }
 
     @Test
     public void testFalseHasWinningDeck() {
