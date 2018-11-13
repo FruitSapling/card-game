@@ -1,12 +1,19 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Player implements Runnable{
 
     private ArrayList<Card> cards = new ArrayList<>();
+    private ArrayList<String> fileOutput = new ArrayList<>();
     private int playerNumber;
+    private String name;
     private Deck leftDeck, rightDeck;
     private CardGame cardGame;
+    private File outputFile;
     public volatile boolean running;
 
     public Player(int playerNumber, Deck leftDeck, Deck rightDeck, CardGame cardGame) {
@@ -14,17 +21,23 @@ public class Player implements Runnable{
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
         this.cardGame = cardGame;
+        this.name = "Player " + playerNumber;
+        this.outputFile = new File("src/Assets/player" + playerNumber + "_output.txt");
     }
 
     public Player(int playerNumber, Deck leftDeck, Deck rightDeck) {
         this.playerNumber = playerNumber;
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
+        this.name = "Player " + playerNumber;
+        this.outputFile = new File("src/Assets/player" + playerNumber + "_output.txt");
     }
 
     @Override
     public void run() {
         running = true;
+        initialWriteToFile();
+
         while (running) {
             if (leftDeck.hasCards()) {
                 System.out.println(this.playerNumber + "has cards!");
@@ -37,15 +50,18 @@ public class Player implements Runnable{
                 } else System.out.println(this.playerNumber + "NO lock!");
             }
         }
+
+        finalWriteToFile();
+
     }
 
-    public synchronized void checkDeck() {
+    public void checkDeck() {
         if (hasWinningDeck()) {
-            System.out.println(this.playerNumber + " has won");
+            fileOutput.add(name + " wins");
             cardGame.interruptPlayers();
         }
         else {
-            this.notifyAll();
+            writeHandToFile();
         }
     }
 
@@ -72,7 +88,9 @@ public class Player implements Runnable{
 
 
     public void drawCard() {
-        cards.add(leftDeck.removeCard(playerNumber));
+        Card card = leftDeck.removeCard(playerNumber);
+        cards.add(card);
+        fileOutput.add(name + " draws a " + card.getValue() + " from deck " + leftDeck.getDeckNumber());
     }
 
 
@@ -88,9 +106,60 @@ public class Player implements Runnable{
         Random random = new Random();
         int randInt = random.nextInt(throwableCards.size());
 
-        rightDeck.addCard(cards.get(randInt));
+        Card card = cards.get(randInt);
+        rightDeck.addCard(card);
+
+        fileOutput.add(name + " discards a " + card.getValue() + " to deck " + rightDeck.getDeckNumber());
+
         cards.remove(randInt);
 
+    }
+
+    private void initialWriteToFile () {
+        String msg = name + " initial hand: ";
+        for (Card card:cards) {
+            msg += card.getValue();
+        }
+
+        fileOutput.add(msg);
+    }
+
+
+    private void finalWriteToFile() {
+        String msg = name + " final hand: ";
+        for (Card card:cards) {
+            msg += card.getValue() + " ";
+        }
+
+        fileOutput.add(name + " exits");
+        fileOutput.add(msg);
+
+        writeToFile();
+    }
+
+
+    private void writeHandToFile() {
+        String msg = name + " current hand is ";
+
+        for (Card card:cards) {
+            msg += card.getValue() + " ";
+        }
+
+        fileOutput.add(msg);
+    }
+
+
+    private void writeToFile() {
+        try {
+            PrintStream out = new PrintStream(outputFile);
+            for (int i = 0; i < fileOutput.size(); i ++) {
+                out.println(fileOutput.get(i));
+            }
+            out.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -7,10 +7,12 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Deck {
 
     public ReentrantLock deckLock;
+    private int deckNumber;
     private ArrayList<Card> cardsInDeck = new ArrayList<>();
 
-    public Deck() {
-        deckLock = new ReentrantLock();
+    public Deck(int deckNumber) {
+        this.deckNumber = deckNumber;
+        this.deckLock = new ReentrantLock();
     }
 
     public Deck(Card[] cards) {
@@ -48,5 +50,7 @@ public class Deck {
     public void setCardsInDeck(ArrayList<Card> cardsInDeck) {
         this.cardsInDeck = cardsInDeck;
     }
+
+    public int getDeckNumber() { return deckNumber; }
 
 }

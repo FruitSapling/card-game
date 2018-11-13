@@ -11,7 +11,7 @@ public class DeckTest {
 
     @Before
     public void setUp() {
-        deck = new Deck();
+        deck = new Deck(1);
     }
 
     @Test

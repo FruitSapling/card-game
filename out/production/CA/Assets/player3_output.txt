@@ -1,0 +1,6 @@
+Player 3 initial hand: 1222
+Player 3 draws a 1from deck 3
+Player 3current hand is 1 2 2 2 1 
+Player 3 discards a 2to deck 4
+Player 3 exits
+Player 3 final hand: 1221

@@ -1,6 +1,10 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class PlayerTest {
@@ -10,13 +14,16 @@ public class PlayerTest {
 
     @Before
     public void setup() {
+        deckLeft = new Deck(1);
+        deckRight = new Deck(2);
+        player = new Player(1,deckLeft,deckRight);
         cardGame = new CardGame();
     }
 
     @Test
     public void testFalseHasWinningDeck() {
-        deckLeft = new Deck();
-        deckRight = new Deck();
+        deckLeft = new Deck(1);
+        deckRight = new Deck(2);
 
         for (int i = 0; i < 4; i++) {
             deckLeft.addCard(new Card(i+1));
@@ -37,8 +44,8 @@ public class PlayerTest {
 
     @Test
     public void testTrueHasWinningDeck() {
-        deckLeft = new Deck();
-        deckRight = new Deck();
+        deckLeft = new Deck(1);
+        deckRight = new Deck(2);
 
         for (int i = 0; i < 4; i++) {
             deckLeft.addCard(new Card(1));
@@ -58,25 +65,19 @@ public class PlayerTest {
 
 
     @Test
-    public void discardCard() {
-        deckLeft = new Deck();
-        deckRight = new Deck();
-
-        for (int i = 0; i < 4; i++) {
-            deckLeft.addCard(new Card(i));
-            deckRight.addCard(new Card(4-i));
-        }
-
-
-        player = new Player(1,deckLeft,deckRight);
-
-        player.drawCard();
-        player.drawCard();
-        player.drawCard();
-        player.drawCard();
+    public void testDiscardCard() {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.addAll(Arrays.asList(new Card[] {new Card(1),new Card(1),new Card(2),new Card(1),new Card(1)}));
+        player.setCards(cards);
 
         player.discardCard();
 
-        assertEquals(false, player.hasWinningDeck());
+        ArrayList<Card> newCards = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            newCards.add(new Card(1));
+        }
+
+
+        assertEquals(newCards,player.getCards());
     }
 }

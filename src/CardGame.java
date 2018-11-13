@@ -45,7 +45,7 @@ public class CardGame {
 
         try {
             //packFile = new File(scanner.nextLine());
-            packFile = new File("/Users/willem/Dropbox/Uni/Term 3/ECM2414 Software Development/CA/src/Assets/packFile.txt");
+            packFile = new File("C:/Users/bobby/Documents/University/Year 2/ECM2414 - Software Development/CA/card-game/src/Assets/packFile.txt");
             System.out.println(packFile.getAbsoluteFile());
 
         } catch (Exception e) {
@@ -93,7 +93,7 @@ public class CardGame {
     public Deck[] getDecks() {
         decks = new Deck[numberOfPlayers];
         for (int i = 0; i < numberOfPlayers; i++) {
-            decks[i] = new Deck();
+            decks[i] = new Deck(i+1);
         }
         return decks;
     }
