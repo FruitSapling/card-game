@@ -1,6 +1,9 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,45 +25,55 @@ public class PlayerTest {
 
     @Test
     public void testFalseHasWinningDeck() {
-        deckLeft = new Deck(1);
-        deckRight = new Deck(2);
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.addAll(Arrays.asList(new Card[] {new Card(3),new Card(1),new Card(2),new Card(1),new Card(1)}));
+        player.setCards(cards);
 
-        for (int i = 0; i < 4; i++) {
-            deckLeft.addCard(new Card(i+1));
-            deckRight.addCard(new Card(4-i));
-        }
-
-
-        player = new Player(1,deckLeft,deckRight);
-
-        player.drawCard();
-        player.drawCard();
-        player.drawCard();
-        player.drawCard();
-
-        assertEquals(false,player.hasWinningDeck());
+        assertEquals(false, player.hasWinningDeck());
     }
 
 
     @Test
     public void testTrueHasWinningDeck() {
-        deckLeft = new Deck(1);
-        deckRight = new Deck(2);
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.addAll(Arrays.asList(new Card[] {new Card(1),new Card(1),new Card(2),new Card(1),new Card(1)}));
+        player.setCards(cards);
 
-        for (int i = 0; i < 4; i++) {
-            deckLeft.addCard(new Card(1));
-            deckRight.addCard(new Card(4-i));
-        }
+        assertEquals(true, player.hasWinningDeck());
+    }
 
 
-        player = new Player(1,deckLeft,deckRight);
+    @Test
+    public void testAddCardTrue() {
+        Card card = new Card(1);
+
+        assertEquals(true, player.addCard(card));
+        assertEquals(false, player.getCards().isEmpty());
+    }
+
+
+    @Test
+    public void testAddCardFalse() {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.addAll(Arrays.asList(new Card[] {new Card(1),new Card(1),new Card(2),new Card(1)}));
+        player.setCards(cards);
+
+        Card card = new Card(1);
+
+        assertEquals(false,player.addCard(card));
+    }
+
+
+    @Test
+    public void testDrawCard() {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.addAll(Arrays.asList(new Card[] {new Card(1),new Card(1),new Card(2),new Card(1)}));
+        deckLeft.setCardsInDeck(cards);
 
         player.drawCard();
-        player.drawCard();
-        player.drawCard();
-        player.drawCard();
 
-        assertEquals(true,player.hasWinningDeck());
+        assertEquals(false,player.getCards().isEmpty());
+        //assertEquals(cards.get(2), player.getCards().get(0));
     }
 
 
@@ -72,12 +85,27 @@ public class PlayerTest {
 
         player.discardCard();
 
-        ArrayList<Card> newCards = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            newCards.add(new Card(1));
-        }
+        cards.remove(2);
 
 
-        assertEquals(newCards,player.getCards());
+        assertEquals(cards,player.getCards());
+    }
+
+
+    @Test
+    public void testWriteToFile() throws Exception {
+        Class playerClass = player.getClass();
+        Method writeToFile = playerClass.getDeclaredMethod("writeToFile");
+
+        writeToFile.setAccessible(true);
+
+        player.fileOutput.add("TESTING123");
+        writeToFile.invoke(player);
+
+        BufferedReader reader = new BufferedReader(new FileReader(new File("src/Assets/player1_output.txt")));
+        String text = reader.readLine();
+        reader.close();
+
+        assertEquals(true,text.equals("TESTING123"));
     }
 }

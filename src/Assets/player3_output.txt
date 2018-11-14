@@ -1,6 +1,14 @@
-Player 3 initial hand: 1222
-Player 3 draws a 1from deck 3
-Player 3current hand is 1 2 2 2 1 
-Player 3 discards a 2to deck 4
+Player 3 initial hand: 3 3 3 3 
+Player 3 draws a 3 from deck 3
+Player 3 discards a 3 to deck 4
+Player 3 draws a 3 from deck 3
+Player 3 discards a 3 to deck 4
+Player 3 draws a 3 from deck 3
+Player 3 discards a 3 to deck 4
+Player 3 draws a 3 from deck 3
+Player 3 discards a 3 to deck 4
+Player 3 draws a 2 from deck 3
+Player 3 discards a 2 to deck 4
+Player 1 has informed Player 3 that Player 1 has won
 Player 3 exits
-Player 3 final hand: 1221
+Player 3 final hand: 3 3 3 3 

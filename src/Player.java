@@ -8,9 +8,9 @@ import java.util.Random;
 public class Player implements Runnable{
 
     private ArrayList<Card> cards = new ArrayList<>();
-    private ArrayList<String> fileOutput = new ArrayList<>();
+    public ArrayList<String> fileOutput = new ArrayList<>();
     private int playerNumber;
-    private String name;
+    public String name;
     private Deck leftDeck, rightDeck;
     private CardGame cardGame;
     private File outputFile;
@@ -37,17 +37,18 @@ public class Player implements Runnable{
     public void run() {
         running = true;
         initialWriteToFile();
+        //checkDeck();
 
         while (running) {
             if (leftDeck.hasCards()) {
-                System.out.println(this.playerNumber + "has cards!");
+                //System.out.println(this.playerNumber + "has cards!");
                 if (leftDeck.deckLock.tryLock()) {
-                    System.out.println(this.playerNumber + "got lock!" + leftDeck.deckLock.getHoldCount());
+                    //System.out.println(this.playerNumber + "got lock!" + leftDeck.deckLock.getHoldCount());
                     drawCard();
                     checkDeck();
                     discardCard();
                     leftDeck.deckLock.unlock();
-                } else System.out.println(this.playerNumber + "NO lock!");
+                } //else System.out.println(this.playerNumber + "NO lock!");
             }
         }
 
@@ -57,8 +58,7 @@ public class Player implements Runnable{
 
     public void checkDeck() {
         if (hasWinningDeck()) {
-            fileOutput.add(name + " wins");
-            cardGame.interruptPlayers();
+            cardGame.interruptPlayers(this);
         }
         else {
             writeHandToFile();
@@ -104,21 +104,25 @@ public class Player implements Runnable{
         }
 
         Random random = new Random();
-        int randInt = random.nextInt(throwableCards.size());
+        Card card = cards.get(0);
 
-        Card card = cards.get(randInt);
+        if (throwableCards.size() > 0) {
+            int randInt = random.nextInt(throwableCards.size());
+            card = throwableCards.get(randInt);
+        }
+
         rightDeck.addCard(card);
 
         fileOutput.add(name + " discards a " + card.getValue() + " to deck " + rightDeck.getDeckNumber());
 
-        cards.remove(randInt);
+        cards.remove(card);
 
     }
 
     private void initialWriteToFile () {
         String msg = name + " initial hand: ";
         for (Card card:cards) {
-            msg += card.getValue();
+            msg += card.getValue() + " ";
         }
 
         fileOutput.add(msg);

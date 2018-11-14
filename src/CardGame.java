@@ -9,6 +9,8 @@ public class CardGame {
     public Player[] players;
     public Deck[] decks;
 
+    private boolean running = true;
+
     public int getNumPlayers() {
         String errorMessage = "Please enter a valid number of players (1 to n, where n is a positive integer).";
 
@@ -29,9 +31,21 @@ public class CardGame {
         }
     }
 
-    public void interruptPlayers() {
-        for (Player p: players) {
-            p.running = false;
+    public void interruptPlayers(Player winner) {
+        if (this.running) {
+
+            this.running = false;
+
+            for (Player p: players) {
+                p.running = false;
+
+                if (p != winner)
+                    p.fileOutput.add(winner.name + " has informed " + p.name + " that " + winner.name + " has won");
+                else
+                    p.fileOutput.add(p.name + " wins");
+            }
+
+            System.out.println(winner.name + " wins");
         }
     }
 
@@ -45,7 +59,8 @@ public class CardGame {
 
         try {
             //packFile = new File(scanner.nextLine());
-            packFile = new File("C:/Users/bobby/Documents/University/Year 2/ECM2414 - Software Development/CA/card-game/src/Assets/packFile.txt");
+            //packFile = new File("C:/Users/bobby/Documents/University/Year 2/ECM2414 - Software Development/CA/card-game/src/Assets/packFile2.txt");
+            //packFile = new File("WILLEM'S PATH");
             System.out.println(packFile.getAbsoluteFile());
 
         } catch (Exception e) {
@@ -133,7 +148,6 @@ public class CardGame {
         for (int i = 0; i < numberOfPlayers; i++) {
             Thread thread = new Thread(players[i]);
             thread.start();
-
         }
     }
 

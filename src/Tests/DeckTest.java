@@ -2,8 +2,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class DeckTest {
 
@@ -16,27 +18,31 @@ public class DeckTest {
 
     @Test
     public void testRemoveCardWithoutPreferredValue() {
-        Card card1 = new Card(3);
-        Card card2 = new Card(2);
-        Card card3 = new Card(3);
+        Card[] cards = {new Card(1),new Card(2),new Card(2),new Card(2)};
+        ArrayList<Card> arrCards = new ArrayList<>();
 
-        deck.addCard(card1);
-        deck.addCard(card2);
-        deck.addCard(card3);
-        assertEquals(card1,deck.removeCard(1));
+        arrCards.addAll(Arrays.asList(cards));
+
+        deck.setCardsInDeck(arrCards);
+        assertEquals(cards[0],deck.removeCard(3));
     }
 
     @Test
     public void testRemoveCardWithPreferredValue() {
-        Card card1 = new Card(1);
-        Card card2 = new Card(2);
-        Card card3 = new Card(3);
+        Card[] cards = {new Card(2),new Card(2),new Card(1),new Card(2)};
+        ArrayList<Card> arrCards = new ArrayList<>();
 
-        deck.addCard(card1);
-        deck.addCard(card2);
-        deck.addCard(card3);
-        assertEquals(card3,deck.removeCard(3));
+        arrCards.addAll(Arrays.asList(cards));
+
+        deck.setCardsInDeck(arrCards);
+        assertEquals(cards[2],deck.removeCard(1));
     }
+
+    @Test
+    public void testHasCardsEmpty() {
+        assertEquals(false,deck.hasCards());
+    }
+
 
     @Test
     public void testAddCard() {
@@ -44,6 +50,6 @@ public class DeckTest {
 
         deck.addCard(card1);
 
-        assertEquals(card1,deck.removeCard(1));
+        assertEquals(true,deck.hasCards());
     }
 }

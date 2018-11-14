@@ -15,8 +15,9 @@ public class Deck {
         this.deckLock = new ReentrantLock();
     }
 
-    public Deck(Card[] cards) {
+    public Deck(int deckNumber, Card[] cards) {
         this.cardsInDeck = new ArrayList<Card> (Arrays.asList(cards));
+        this.deckNumber = deckNumber;
         System.out.println(this.cardsInDeck);
     }
 
