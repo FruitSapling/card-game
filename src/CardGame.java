@@ -46,6 +46,10 @@ public class CardGame {
             }
 
             System.out.println(winner.name + " wins");
+
+            for (Deck deck:decks) {
+                deck.writeToFile();
+            }
         }
     }
 
@@ -59,7 +63,7 @@ public class CardGame {
 
         try {
             //packFile = new File(scanner.nextLine());
-            //packFile = new File("C:/Users/bobby/Documents/University/Year 2/ECM2414 - Software Development/CA/card-game/src/Assets/packFile2.txt");
+            packFile = new File("C:/Users/bobby/Documents/University/Year 2/ECM2414 - Software Development/CA/card-game/src/Assets/packFile.txt");
             //packFile = new File("WILLEM'S PATH");
             System.out.println(packFile.getAbsoluteFile());
 
@@ -78,7 +82,9 @@ public class CardGame {
                 String str = reader.readLine();
                 //System.out.println(str);
                 int cardValue = Integer.parseInt(str);
-                if (cardValue >  0 && cardValue <= numberOfPlayers) {
+
+                //&& cardValue <= numberOfPlayers
+                if (cardValue >  0) {
                     cards[i] = new Card(cardValue);
                 } else {
                     throw new Exception();

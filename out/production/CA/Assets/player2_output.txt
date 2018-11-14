@@ -1,5 +1,14 @@
 Player 2 initial hand: 2 2 2 2 
 Player 2 draws a 2 from deck 2
 Player 2 discards a 2 to deck 3
+Player 2 draws a 2 from deck 2
+Player 2 discards a 2 to deck 3
+Player 2 draws a 2 from deck 2
+Player 2 discards a 2 to deck 3
+Player 2 draws a 2 from deck 2
+Player 2 discards a 2 to deck 3
+Player 2 draws a 1 from deck 2
+Player 2 discards a 1 to deck 3
+Player 3 has informed Player 2 that Player 3 has won
 Player 2 exits
 Player 2 final hand: 2 2 2 2 

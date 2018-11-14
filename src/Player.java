@@ -14,6 +14,7 @@ public class Player implements Runnable{
     private Deck leftDeck, rightDeck;
     private CardGame cardGame;
     private File outputFile;
+    public int turnsHad;
     public volatile boolean running;
 
     public Player(int playerNumber, Deck leftDeck, Deck rightDeck, CardGame cardGame) {
@@ -36,6 +37,7 @@ public class Player implements Runnable{
     @Override
     public void run() {
         running = true;
+        turnsHad = 0;
         initialWriteToFile();
         //checkDeck();
 
@@ -47,6 +49,7 @@ public class Player implements Runnable{
                     drawCard();
                     checkDeck();
                     discardCard();
+                    turnsHad += 1;
                     leftDeck.deckLock.unlock();
                 } //else System.out.println(this.playerNumber + "NO lock!");
             }
