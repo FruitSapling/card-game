@@ -27,10 +27,22 @@ public class Deck {
         System.out.println(this.cardsInDeck);
     }
 
+
     public void addCard(Card card) {
         this.cardsInDeck.add(card);
     }
 
+
+    /*
+    * A method to remove a card from the current deck.
+    * It either returns the first card that has a value that matches the player's preferred value,
+    * or it returns the first card in the deck. Before then removing the returned card from the current deck.
+    *
+    * PARAMS:
+    *   - preferredValue - The player's preferred value which is the same as the player number to look for.
+    * RETURNS:
+    *   - Card - A card from the current deck.
+    * */
     public Card removeCard(int preferredValue) {
 
         for(Card card : cardsInDeck) {
@@ -45,11 +57,15 @@ public class Deck {
         return removedCard;
     }
 
+
     public boolean hasCards() {
         if (!this.cardsInDeck.isEmpty()) return true;
         else return false;
     }
 
+    /*
+    * A method to write a string to the outputFile who's path is specified in the constructor.
+    * */
     public void writeToFile() {
         String msg = "Final cards left in deck: ";
         try {

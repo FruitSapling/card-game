@@ -11,6 +11,11 @@ public class CardGame {
 
     private boolean running = true;
 
+    /*
+    * A method to get the user to specify how many players are playing in the current game.
+    * This method makes sure that the inputted value is an integer and if it isn't then it calls itself recursively.
+    * Otherwise it returns the inputted numbers,
+    * */
     public int getNumPlayers() {
         String errorMessage = "Please enter a valid number of players (1 to n, where n is a positive integer).";
 
@@ -31,6 +36,12 @@ public class CardGame {
         }
     }
 
+    /*
+    * This method is called by the winning player thread.
+    * It changes the running variable to false on every player object.
+    * Then it adds the appropriate string to the output file of each player.
+    * Finally, it calls each deck's 'writing to file' method.
+    * */
     public void interruptPlayers(Player winner) {
         if (this.running) {
 
@@ -53,6 +64,12 @@ public class CardGame {
         }
     }
 
+    /*
+    * This method gets the user to input a path to an appropriate file.
+    * If the file path is valid then it reads the integer values from the pack file, checks they are valid then
+    * it creates a card for each one.
+    * It returns the arraylist of cards.
+    * */
     private Card[] getPack() {
         String errorMessage = "Please enter a valid path name to the pack file.";
 
@@ -111,6 +128,9 @@ public class CardGame {
         return cards;
     }
 
+    /*
+    * This method creates the decks for the game.
+    * */
     public Deck[] getDecks() {
         decks = new Deck[numberOfPlayers];
         for (int i = 0; i < numberOfPlayers; i++) {
@@ -119,6 +139,9 @@ public class CardGame {
         return decks;
     }
 
+    /*
+    * This method creates the player objects for the game.
+    * */
     public Player[] getPlayers() {
         players = new Player[numberOfPlayers];
 
@@ -132,6 +155,10 @@ public class CardGame {
         return players;
     }
 
+    /*
+    * This method gives every player 4 cards,
+    * then it deals every deck 4 cards.
+    * */
     public void dealCards() {
         try {
             for (int i = 0; i < (numberOfPlayers * 4); i++) {
@@ -149,6 +176,9 @@ public class CardGame {
     }
 
 
+    /*
+    * This method creates and starts the thread for each player object.
+    * */
     public void startGame() {
 
         for (int i = 0; i < numberOfPlayers; i++) {

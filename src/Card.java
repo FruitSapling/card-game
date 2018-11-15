@@ -10,6 +10,9 @@ public class Card {
         return value;
     }
 
+    /*
+    * Written an override toString() method to make printing the card value easier in arrays.
+    * */
     @Override
     public String toString() {
         return String.valueOf(this.getValue());
