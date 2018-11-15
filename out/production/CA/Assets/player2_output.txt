@@ -1,18 +1,6 @@
 Player 2 initial hand: 2 4 3 3 
 Player 2 draws a 4 from deck 2
 Player 2 current hand is 2 4 3 3 4 
-Player 2 discards a 3 to deck 3
-Player 2 draws a 4 from deck 2
-Player 2 current hand is 2 4 3 4 4 
-Player 2 discards a 4 to deck 3
-Player 2 draws a 4 from deck 2
-Player 2 current hand is 2 4 3 4 4 
-Player 2 discards a 4 to deck 3
-Player 2 draws a 4 from deck 2
-Player 2 current hand is 2 4 3 4 4 
-Player 2 discards a 3 to deck 3
-Player 2 draws a 3 from deck 2
-Player 2 current hand is 2 4 4 4 3 
 Player 2 discards a 4 to deck 3
 Player 2 exits
-Player 2 final hand: 2 4 4 3 
+Player 2 final hand: 2 3 3 4 

@@ -1,34 +1,31 @@
 Player 4 initial hand: 2 3 3 1 
 Player 4 draws a 4 from deck 4
 Player 4 current hand is 2 3 3 1 4 
+Player 4 discards a 2 to deck 1
+Player 4 draws a 4 from deck 4
+Player 4 current hand is 3 3 1 4 4 
+Player 4 discards a 1 to deck 1
+Player 4 draws a 2 from deck 4
+Player 4 current hand is 3 3 4 4 2 
+Player 4 discards a 2 to deck 1
+Player 4 draws a 2 from deck 4
+Player 4 current hand is 3 3 4 4 2 
 Player 4 discards a 3 to deck 1
-Player 4 draws a 4 from deck 4
-Player 4 current hand is 2 3 1 4 4 
-Player 4 discards a 1 to deck 1
 Player 4 draws a 2 from deck 4
-Player 4 current hand is 2 3 4 4 2 
-Player 4 discards a 2 to deck 1
-Player 4 draws a 4 from deck 4
-Player 4 current hand is 2 3 4 4 4 
-Player 4 discards a 3 to deck 1
-Player 4 draws a 4 from deck 4
-Player 4 discards a 2 to deck 1
-Player 4 draws a 2 from deck 4
+Player 4 current hand is 3 4 4 2 2 
 Player 4 discards a 2 to deck 1
 Player 4 draws a 1 from deck 4
-Player 4 discards a 1 to deck 1
-Player 4 draws a 2 from deck 4
-Player 4 discards a 2 to deck 1
-Player 4 draws a 2 from deck 4
-Player 4 discards a 2 to deck 1
-Player 4 draws a 2 from deck 4
+Player 4 current hand is 3 4 4 2 1 
 Player 4 discards a 2 to deck 1
 Player 4 draws a 1 from deck 4
+Player 4 current hand is 3 4 4 1 1 
 Player 4 discards a 1 to deck 1
 Player 4 draws a 1 from deck 4
+Player 4 current hand is 3 4 4 1 1 
 Player 4 discards a 1 to deck 1
-Player 4 draws a 1 from deck 4
-Player 4 discards a 1 to deck 1
+Player 4 draws a 2 from deck 4
+Player 4 current hand is 3 4 4 1 2 
+Player 4 discards a 2 to deck 1
 Player 1 has informed Player 4 that Player 1 has won
 Player 4 exits
-Player 4 final hand: 4 4 4 4 
+Player 4 final hand: 3 4 4 1 

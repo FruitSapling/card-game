@@ -39,21 +39,26 @@ public class Player implements Runnable{
         running = true;
         turnsHad = 0;
         initialWriteToFile();
-        //checkDeck();
 
         while (running) {
-            System.out.println(this.playerNumber + " has the hand: " + this.getCards());
             if (leftDeck.hasCards()) {
-                //System.out.println(this.playerNumber + "has cards!");
                 if (leftDeck.deckLock.tryLock()) {
-                    //System.out.println(this.playerNumber + "got lock!" + leftDeck.deckLock.getHoldCount());
                     drawCard();
                     checkDeck();
                     discardCard();
                     turnsHad += 1;
                     leftDeck.deckLock.unlock();
-                } //else System.out.println(this.playerNumber + "NO lock!");
+                }
             }
+        }
+
+        //make sure the player has 4 cards in hand before they stop
+        switch (cards.size()) {
+            case 4:
+                break;
+            case 5:
+                discardCard();
+                break;
         }
 
         finalWriteToFile();
