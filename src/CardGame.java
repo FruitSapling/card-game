@@ -79,10 +79,7 @@ public class CardGame {
         File packFile;
 
         try {
-            //packFile = new File(scanner.nextLine());
-            packFile = new File("C:/Users/bobby/Documents/University/Year 2/ECM2414 - Software Development/CA/card-game/src/Assets/packFile.txt");
-            //packFile = new File("WILLEM'S PATH");
-            System.out.println(packFile.getAbsoluteFile());
+            packFile = new File("/Users/willem/Dropbox/Uni/Term 3/ECM2414 Software Development/CA/src/Assets/packFile.txt");
 
         } catch (Exception e) {
             System.out.println(errorMessage);

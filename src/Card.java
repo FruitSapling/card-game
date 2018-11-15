@@ -18,4 +18,10 @@ public class Card {
         return String.valueOf(this.getValue());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (((Card) o).getValue() == this.getValue()) return true;
+        else return false;
+    }
+
 }

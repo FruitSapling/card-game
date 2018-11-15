@@ -42,6 +42,7 @@ public class Player implements Runnable{
         //checkDeck();
 
         while (running) {
+            System.out.println(this.playerNumber + " has the hand: " + this.getCards());
             if (leftDeck.hasCards()) {
                 //System.out.println(this.playerNumber + "has cards!");
                 if (leftDeck.deckLock.tryLock()) {

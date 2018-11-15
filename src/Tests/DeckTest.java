@@ -20,7 +20,6 @@ public class DeckTest {
     public void testRemoveCardWithoutPreferredValue() {
         Card[] cards = {new Card(1),new Card(2),new Card(2),new Card(2)};
         ArrayList<Card> arrCards = new ArrayList<>();
-
         arrCards.addAll(Arrays.asList(cards));
 
         deck.setCardsInDeck(arrCards);

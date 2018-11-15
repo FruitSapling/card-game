@@ -66,6 +66,7 @@ public class PlayerTest {
 
     @Test
     public void testDrawCard() {
+        //setting up the deck
         ArrayList<Card> cards = new ArrayList<>();
         cards.addAll(Arrays.asList(new Card[] {new Card(1),new Card(1),new Card(2),new Card(1)}));
         deckLeft.setCardsInDeck(cards);
@@ -79,16 +80,16 @@ public class PlayerTest {
 
     @Test
     public void testDiscardCard() {
-        ArrayList<Card> cards = new ArrayList<>();
-        cards.addAll(Arrays.asList(new Card[] {new Card(1),new Card(1),new Card(2),new Card(1),new Card(1)}));
-        player.setCards(cards);
+        ArrayList<Card> testedCards = new ArrayList<>(), expectedCards = new ArrayList<>();
+        testedCards.addAll(Arrays.asList(new Card[] {new Card(1),new Card(1),new Card(2),new Card(1),new Card(1)}));
 
+        player.setCards(testedCards);
         player.discardCard();
 
-        cards.remove(2);
+        //we expect the 2 to be discarded
+        expectedCards.addAll(Arrays.asList(new Card[] {new Card(1),new Card(1),new Card(1),new Card(1)}));
 
-
-        assertEquals(cards,player.getCards());
+        assertArrayEquals(expectedCards.toArray(), testedCards.toArray());
     }
 
 
