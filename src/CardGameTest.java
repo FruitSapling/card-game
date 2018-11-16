@@ -54,7 +54,7 @@ public class CardGameTest {
 
         assertEquals(true, running.get(cardGame));
 
-        cardGame.interruptPlayers(cardGame.players[0]);
+        cardGame.tellPlayersToFinish(cardGame.players[0]);
 
         for (Player player:cardGame.players) {
             assertEquals(false,player.running);

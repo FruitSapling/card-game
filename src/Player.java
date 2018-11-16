@@ -9,13 +9,14 @@ public class Player implements Runnable{
 
     private ArrayList<Card> cards = new ArrayList<>();
     public ArrayList<String> fileOutput = new ArrayList<>();
-    private int playerNumber;
+    public int playerNumber;
     public String name;
     private Deck leftDeck, rightDeck;
     private CardGame cardGame;
     private File outputFile;
-    public int turnsHad;
+    public int turnsHad, turnsAllowed;
     public volatile boolean running;
+    public boolean waitForCardGame;
 
     public Player(int playerNumber, Deck leftDeck, Deck rightDeck, CardGame cardGame) {
         this.playerNumber = playerNumber;
@@ -40,31 +41,42 @@ public class Player implements Runnable{
         turnsHad = 0;
         initialWriteToFile();
 
+        //while the game is still running, keep having turns
         while (running) {
-            if (leftDeck.hasCards()) {
-                if (leftDeck.deckLock.tryLock()) {
-                    drawCard();
-                    checkDeck();
-                    discardCard();
-                    turnsHad += 1;
-                    leftDeck.deckLock.unlock();
-                }
-            }
+            haveTurn();
+//            System.out.println(playerNumber + " running");
         }
 
-        //make sure the player has 4 cards in hand before they stop
-        switch (cards.size()) {
-            case 4:
-                break;
-            case 5:
-                discardCard();
-                break;
+        while (waitForCardGame) {
+            //do nothing
+        }
+
+        //have more turns to catch up on number of turns
+        while (turnsHad < turnsAllowed) {
+            haveTurn();
+            System.out.println("catching up: " + turnsHad + "/" + turnsAllowed);
+            System.out.println("cards in left deck:" + this.leftDeck.getCardsInDeck());
         }
 
         finalWriteToFile();
 
+        System.out.println(playerNumber + " finished");
+        cardGame.incrementFinishedPlayers();
+
     }
 
+    public void haveTurn() {
+        System.out.println("stuck here");
+        if (leftDeck.hasCards()) {
+            if (leftDeck.deckLock.tryLock()) {
+                drawCard();
+                checkDeck();
+                discardCard();
+                turnsHad += 1;
+                leftDeck.deckLock.unlock();
+            }
+        }
+    }
 
     /*
     * A method to check the current player's hand, if a winning deck is held
@@ -72,10 +84,12 @@ public class Player implements Runnable{
     * However, if the player doesn't hold a winning hand it writes the current hand to the fileOutput.
     * */
     public void checkDeck() {
-        if (hasWinningDeck()) {
-            cardGame.interruptPlayers(this);
-        }
-        else {
+        //if the game is running, and they have won, finish up
+        if (running && hasWinningDeck()) {
+            cardGame.incrementFinishedPlayers();
+            cardGame.tellPlayersToFinish(this);
+        } else {
+            //the game is not running, so just write hand and do not check for win
             writeHandToFile();
         }
     }
