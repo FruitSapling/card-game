@@ -1,17 +1,21 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CardGame {
 
-    public int numberOfPlayers, finishedPlayers;
+    public int numberOfPlayers;
     public Card[] pack;
     public Player[] players;
     public Player winner;
     public Thread[] playerThreads;
     public Deck[] decks;
 
-    private boolean gameRunning = true;
+    public int turnsAllowed;
+    private AtomicInteger finishedPlayers = new AtomicInteger(0);
+    public AtomicBoolean gameRunning = new AtomicBoolean(true);
 
     /*
     * A method to get the user to specify how many players are playing in the current game.
@@ -40,48 +44,9 @@ public class CardGame {
 
     //synchronized in case two threads attempt to simultaneously access finishedPlayers
     public synchronized void incrementFinishedPlayers() {
-        finishedPlayers += 1;
+        finishedPlayers.incrementAndGet();
     }
 
-    /*
-    * This method is called by the winning player thread.
-    * It changes the running variable to false on every player object,
-    * then it changes the turnsAllowed for all players so they all have
-    * the same number of turns.
-    * Then, it adds the appropriate string to the output file of each player.
-    * Finally, it calls each deck's 'writing to file' method.
-    * */
-    public void tellPlayersToFinish(Player winner){
-
-        this.winner = winner;
-
-        if (this.gameRunning) {
-            this.gameRunning = false;
-
-            int turnsAllowed = 0;
-
-            for (int i = 0; i < numberOfPlayers; i++) {
-                players[i].waitForCardGame = true;
-                players[i].running = false;
-            }
-
-            try {
-                Thread.sleep(10);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            for (int i = 0; i < numberOfPlayers; i++) {
-                if (players[i].turnsHad > turnsAllowed)
-                    turnsAllowed = players[i].turnsHad;
-            }
-
-            for (int i = 0; i < numberOfPlayers; i++) {
-                players[i].turnsAllowed = turnsAllowed;
-                players[i].waitForCardGame = false;
-            }
-        }
-    }
 
     /*
     * This method gets the user to input a path to an appropriate file.
@@ -98,7 +63,8 @@ public class CardGame {
         File packFile;
 
         try {
-            packFile = new File("/Users/willem/Dropbox/Uni/Term 3/ECM2414 Software Development/CA/src/Assets/packFile.txt");
+            //packFile = new File("/Users/willem/Dropbox/Uni/Term 3/ECM2414 Software Development/CA/src/Assets/packFile.txt");
+            packFile = new File("C:/Users/bobby/Documents/University/Year 2/ECM2414 - Software Development/CA/card-game/src/Assets/packFileRandom.txt");
 
         } catch (Exception e) {
             System.out.println(errorMessage);
@@ -113,10 +79,8 @@ public class CardGame {
 
             for (int i = 0; i < numberOfPlayers*8; i++) {
                 String str = reader.readLine();
-                //System.out.println(str);
                 int cardValue = Integer.parseInt(str);
 
-                //&& cardValue <= numberOfPlayers
                 if (cardValue >  0) {
                     cards[i] = new Card(cardValue);
                 } else {
@@ -198,37 +162,36 @@ public class CardGame {
     public void startGame() {
         playerThreads = new Thread[numberOfPlayers];
 
-        Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                System.out.print(e);
-            }
-        };
-
         for (int i = 0; i < numberOfPlayers; i++) {
             Thread thread = new Thread(players[i]);
             playerThreads[i] = thread;
-            thread.setUncaughtExceptionHandler(h);
             thread.start();
         }
 
-        while (finishedPlayers != 4) {
-            System.out.println(finishedPlayers);
+        while (gameRunning.get() || finishedPlayers.get() != 4) {
+
         }
-        System.out.println(finishedPlayers);
 
-        for (Player p: players) {
+        //Find player with most turns had to enable the others to catch up
+        turnsAllowed = 0;
 
-            if (p != winner)
-                p.fileOutput.add(winner.name + " has informed " + p.name + " that " + winner.name + " has won");
-            else {
-                System.out.println(p.name + " won");
-                p.fileOutput.add(p.name + " wins");
+        for (int i = 0; i < numberOfPlayers; i++) {
+            if (players[i].turnsHad > turnsAllowed)
+                turnsAllowed = players[i].turnsHad;
+        }
+
+        finishedPlayers.set(0);
+
+        //Notify all the players to continue catching up.
+        for (Player p:players) {
+            synchronized (p){
+                p.notify();
             }
         }
 
-        for (Player p: players) {
-            p.finalWriteToFile();
+        //Wait till the players are finished again
+        while (finishedPlayers.get() != 4) {
+
         }
 
         for (Deck deck:decks) {
@@ -247,7 +210,5 @@ public class CardGame {
         cardGame.dealCards();
 
         cardGame.startGame();
-
-
     }
 }

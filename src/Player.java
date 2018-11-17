@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Player implements Runnable{
 
@@ -15,8 +16,6 @@ public class Player implements Runnable{
     private CardGame cardGame;
     private File outputFile;
     public int turnsHad, turnsAllowed;
-    public volatile boolean running;
-    public boolean waitForCardGame = true;
 
     public Player(int playerNumber, Deck leftDeck, Deck rightDeck, CardGame cardGame) {
         this.playerNumber = playerNumber;
@@ -37,25 +36,45 @@ public class Player implements Runnable{
 
     @Override
     public void run() {
-        running = true;
         turnsHad = 0;
 
         initialWriteToFile();
 
+        //Check if initial hand is a winning hand.
+        checkDeck();
+
         //while the game is still running, keep having turns
-        while (running) {
+        while (cardGame.gameRunning.get()) {
             haveTurn();
         }
 
-        while (waitForCardGame) {
-            //do nothing
+        cardGame.incrementFinishedPlayers();
+
+        synchronized (this) {
+            try {
+                this.wait();
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
-        //have more turns to catch up on number of turns
+        //Catch up to the player who had the most turns
+        turnsAllowed = cardGame.turnsAllowed;
+
         while (turnsHad < turnsAllowed) {
             haveTurn();
         }
+        if (this != cardGame.winner)
+            fileOutput.add(cardGame.winner.name + " has informed " + name + " that " + cardGame.winner.name + " has won");
+        else {
+            System.out.println(name + " won");
+        }
+
+        finalWriteToFile();
+
         cardGame.incrementFinishedPlayers();
+
     }
 
     public void haveTurn() {
@@ -77,9 +96,11 @@ public class Player implements Runnable{
     * */
     public void checkDeck() {
         //if the game is running, and they have won, finish up
-        if (running && hasWinningDeck()) {
+        if (cardGame.gameRunning.get() && hasWinningDeck()) {
 //            cardGame.incrementFinishedPlayers();
-            cardGame.tellPlayersToFinish(this);
+            cardGame.winner = this;
+            cardGame.gameRunning.set(false);
+            fileOutput.add(name + " wins");
         } else {
             //the game is not running, so just write hand and do not check for win
             writeHandToFile();
