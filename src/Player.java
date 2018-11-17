@@ -47,8 +47,6 @@ public class Player implements Runnable{
             haveTurn();
         }
 
-        System.out.println(playerNumber + " got to AFTER running");
-
         while (waitForCardGame) {
             //do nothing
         }
@@ -81,8 +79,7 @@ public class Player implements Runnable{
         //if the game is running, and they have won, finish up
         if (running && hasWinningDeck()) {
 //            cardGame.incrementFinishedPlayers();
-            cardGame. tellPlayersToFinish(this);
-            System.out.println(name);
+            cardGame.tellPlayersToFinish(this);
         } else {
             //the game is not running, so just write hand and do not check for win
             writeHandToFile();

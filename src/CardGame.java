@@ -38,7 +38,8 @@ public class CardGame {
         }
     }
 
-    public void incrementFinishedPlayers() {
+    //synchronized in case two threads attempt to simultaneously access finishedPlayers
+    public synchronized void incrementFinishedPlayers() {
         finishedPlayers += 1;
     }
 
@@ -214,20 +215,17 @@ public class CardGame {
         while (finishedPlayers != 4) {
             System.out.println(finishedPlayers);
         }
+        System.out.println(finishedPlayers);
 
         for (Player p: players) {
 
-            System.out.println("player " + p.playerNumber + " had " + p.turnsHad + " turns");
-            System.out.println(p.getCards());
-            System.out.println("Cards in left deck for Player " + p.playerNumber + " : " + p.getLeftDeck().getCardsInDeck());
-
             if (p != winner)
                 p.fileOutput.add(winner.name + " has informed " + p.name + " that " + winner.name + " has won");
-            else
+            else {
+                System.out.println(p.name + " won");
                 p.fileOutput.add(p.name + " wins");
+            }
         }
-
-        System.out.println(winner.name + " wins");
 
         for (Player p: players) {
             p.finalWriteToFile();
