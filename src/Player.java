@@ -16,7 +16,7 @@ public class Player implements Runnable{
     private File outputFile;
     public int turnsHad, turnsAllowed;
     public volatile boolean running;
-    public boolean waitForCardGame;
+    public boolean waitForCardGame = true;
 
     public Player(int playerNumber, Deck leftDeck, Deck rightDeck, CardGame cardGame) {
         this.playerNumber = playerNumber;
@@ -39,13 +39,15 @@ public class Player implements Runnable{
     public void run() {
         running = true;
         turnsHad = 0;
+
         initialWriteToFile();
 
         //while the game is still running, keep having turns
         while (running) {
             haveTurn();
-//            System.out.println(playerNumber + " running");
         }
+
+        System.out.println(playerNumber + " got to AFTER running");
 
         while (waitForCardGame) {
             //do nothing
@@ -54,24 +56,16 @@ public class Player implements Runnable{
         //have more turns to catch up on number of turns
         while (turnsHad < turnsAllowed) {
             haveTurn();
-            System.out.println("catching up: " + turnsHad + "/" + turnsAllowed);
-            System.out.println("cards in left deck:" + this.leftDeck.getCardsInDeck());
         }
-
-        finalWriteToFile();
-
-        System.out.println(playerNumber + " finished");
         cardGame.incrementFinishedPlayers();
-
     }
 
     public void haveTurn() {
-        System.out.println("stuck here");
         if (leftDeck.hasCards()) {
             if (leftDeck.deckLock.tryLock()) {
                 drawCard();
-                checkDeck();
                 discardCard();
+                checkDeck();
                 turnsHad += 1;
                 leftDeck.deckLock.unlock();
             }
@@ -86,8 +80,9 @@ public class Player implements Runnable{
     public void checkDeck() {
         //if the game is running, and they have won, finish up
         if (running && hasWinningDeck()) {
-            cardGame.incrementFinishedPlayers();
-            cardGame.tellPlayersToFinish(this);
+//            cardGame.incrementFinishedPlayers();
+            cardGame. tellPlayersToFinish(this);
+            System.out.println(name);
         } else {
             //the game is not running, so just write hand and do not check for win
             writeHandToFile();
@@ -168,7 +163,7 @@ public class Player implements Runnable{
     /*
     * Method to add to the fileOutput the game starting strings.
     * */
-    private void initialWriteToFile () {
+    public void initialWriteToFile () {
         String msg = name + " initial hand: ";
         for (Card card:cards) {
             msg += card.getValue() + " ";
@@ -181,7 +176,7 @@ public class Player implements Runnable{
     /*
      * Method to add to the fileOutput the game ending strings.
      * */
-    private void finalWriteToFile() {
+    public void finalWriteToFile() {
         String msg = name + " final hand: ";
         for (Card card:cards) {
             msg += card.getValue() + " ";
@@ -197,7 +192,7 @@ public class Player implements Runnable{
     /*
      * Method to add to the fileOutput the player's current hand.
      * */
-    private void writeHandToFile() {
+    public void writeHandToFile() {
         String msg = name + " current hand is ";
 
         for (Card card:cards) {

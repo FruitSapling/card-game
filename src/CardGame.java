@@ -7,6 +7,7 @@ public class CardGame {
     public int numberOfPlayers, finishedPlayers;
     public Card[] pack;
     public Player[] players;
+    public Player winner;
     public Thread[] playerThreads;
     public Deck[] decks;
 
@@ -49,7 +50,10 @@ public class CardGame {
     * Then, it adds the appropriate string to the output file of each player.
     * Finally, it calls each deck's 'writing to file' method.
     * */
-    public void tellPlayersToFinish(Player winner) {
+    public void tellPlayersToFinish(Player winner){
+
+        this.winner = winner;
+
         if (this.gameRunning) {
             this.gameRunning = false;
 
@@ -60,6 +64,12 @@ public class CardGame {
                 players[i].running = false;
             }
 
+            try {
+                Thread.sleep(10);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             for (int i = 0; i < numberOfPlayers; i++) {
                 if (players[i].turnsHad > turnsAllowed)
                     turnsAllowed = players[i].turnsHad;
@@ -68,38 +78,6 @@ public class CardGame {
             for (int i = 0; i < numberOfPlayers; i++) {
                 players[i].turnsAllowed = turnsAllowed;
                 players[i].waitForCardGame = false;
-            }
-
-
-//            for (int i = 0; i < numberOfPlayers; i++) {
-//                try {
-//                    playerThreads[i].join();
-//                } catch (InterruptedException e) {
-//                    //TODO: handle this - what should we do if the thread is interrupted while we are waiting for join() to finish?
-//                    e.printStackTrace();
-//                }
-//            }
-
-            while (finishedPlayers != 4) {
-                //wait
-//                System.out.println("waiting for finishedPlayers=4");
-//                System.out.println(finishedPlayers);
-            }
-
-            for (Player p: players) {
-                System.out.println("player " + p.playerNumber + " had " + p.turnsHad + " turns");
-                System.out.println("Cards in left deck for Player " + p.playerNumber + " : " + p.getLeftDeck().getCardsInDeck());
-
-                if (p != winner)
-                    p.fileOutput.add(winner.name + " has informed " + p.name + " that " + winner.name + " has won");
-                else
-                    p.fileOutput.add(p.name + " wins");
-            }
-
-            System.out.println(winner.name + " wins");
-
-            for (Deck deck:decks) {
-                deck.writeToFile();
             }
         }
     }
@@ -119,7 +97,7 @@ public class CardGame {
         File packFile;
 
         try {
-            packFile = new File("/Users/willem/Dropbox/Uni/Term 3/ECM2414 Software Development/CA/src/Assets/packFileRandom.txt");
+            packFile = new File("/Users/willem/Dropbox/Uni/Term 3/ECM2414 Software Development/CA/src/Assets/packFile.txt");
 
         } catch (Exception e) {
             System.out.println(errorMessage);
@@ -219,11 +197,46 @@ public class CardGame {
     public void startGame() {
         playerThreads = new Thread[numberOfPlayers];
 
+        Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                System.out.print(e);
+            }
+        };
+
         for (int i = 0; i < numberOfPlayers; i++) {
             Thread thread = new Thread(players[i]);
             playerThreads[i] = thread;
+            thread.setUncaughtExceptionHandler(h);
             thread.start();
         }
+
+        while (finishedPlayers != 4) {
+            System.out.println(finishedPlayers);
+        }
+
+        for (Player p: players) {
+
+            System.out.println("player " + p.playerNumber + " had " + p.turnsHad + " turns");
+            System.out.println(p.getCards());
+            System.out.println("Cards in left deck for Player " + p.playerNumber + " : " + p.getLeftDeck().getCardsInDeck());
+
+            if (p != winner)
+                p.fileOutput.add(winner.name + " has informed " + p.name + " that " + winner.name + " has won");
+            else
+                p.fileOutput.add(p.name + " wins");
+        }
+
+        System.out.println(winner.name + " wins");
+
+        for (Player p: players) {
+            p.finalWriteToFile();
+        }
+
+        for (Deck deck:decks) {
+            deck.writeToFile();
+        }
+
     }
 
 
@@ -236,5 +249,7 @@ public class CardGame {
         cardGame.dealCards();
 
         cardGame.startGame();
+
+
     }
 }
