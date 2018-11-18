@@ -1,4 +1,3 @@
-package Tests;
 
 import junit.framework.TestSuite;
 import org.junit.runner.JUnitCore;
