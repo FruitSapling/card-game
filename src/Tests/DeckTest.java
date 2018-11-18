@@ -71,7 +71,7 @@ public class DeckTest {
 
     @Test
     public void testWriteToFile() {
-        Card[] cards = {new Card(2),new Card(2),new Card(2),new Card(2)};
+        Card[] cards = {new Card(2),new Card(2),new Card(2),new Card(2),new Card(2),new Card(2)};
         ArrayList<Card> arrCards = new ArrayList<>();
         arrCards.addAll(Arrays.asList(cards));
 
@@ -89,7 +89,8 @@ public class DeckTest {
             e.printStackTrace();
         }
 
-        String expected = "Final cards left in deck: 2 2 2 2 ";
+        String expected = "Final cards left in deck: 2 2 2 2 2 2 ";
+        System.out.println(readin);
 
         assertEquals(true, expected.equals(readin));
 

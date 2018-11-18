@@ -11,7 +11,6 @@ import static org.junit.Assert.*;
 public class CardGameTest {
 
     CardGame cardGame;
-    Class cardGameClass;
 
     @Before
     public void setUp() {
@@ -42,8 +41,6 @@ public class CardGameTest {
                 new Player(1,cardGame.decks[2],cardGame.decks[3],cardGame),
                 new Player(1,cardGame.decks[3],cardGame.decks[0],cardGame),
         };
-
-        cardGameClass = cardGame.getClass();
 
     }
 

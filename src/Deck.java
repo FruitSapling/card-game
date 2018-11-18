@@ -20,13 +20,11 @@ public class Deck {
         this.outputFile = new File("src/Assets/deck" + deckNumber + "_output.txt");
     }
 
-
     public void addCard(Card card) {
 
         this.cardsInDeck.add(card);
 
     }
-
 
     /*
     * A method to remove a card from the current deck.
@@ -50,7 +48,6 @@ public class Deck {
         return removedCard;
     }
 
-
     public boolean hasCards() {
         if (!this.cardsInDeck.isEmpty()) return true;
         else return false;
@@ -73,11 +70,6 @@ public class Deck {
             e.printStackTrace();
         }
     }
-
-
-
-
-
 
     public ArrayList<Card> getCardsInDeck() {
         return cardsInDeck;

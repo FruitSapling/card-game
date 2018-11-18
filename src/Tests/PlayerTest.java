@@ -28,10 +28,14 @@ public class PlayerTest {
     public void testHaveTurn() {
         deckLeft.addCard(new Card(1));
 
+        ArrayList<Card> expectedRightDeck = new ArrayList<Card>();
+        expectedRightDeck.add(new Card(1));
+
         player.haveTurn();
 
         assertEquals(1,player.turnsHad);
         assertEquals(false,deckLeft.hasCards());
+        assertEquals( expectedRightDeck,deckRight.getCardsInDeck());
         assertEquals(true,player.getCards().isEmpty());
     }
 

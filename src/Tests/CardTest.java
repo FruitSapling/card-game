@@ -26,7 +26,6 @@ public class CardTest {
 
     }
 
-
     @Test
     public void testEqualsTrue() {
 
