@@ -1,3 +1,4 @@
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,29 +47,12 @@ public class CardGameTest {
 
     }
 
-
-    @Test
-    public void testInterruptPlayers() throws Exception {
-        Field running = cardGameClass.getDeclaredField("running");
-        running.setAccessible(true);
-
-        assertEquals(true, running.get(cardGame));
-
-        //cardGame.tellPlayersToFinish();
-
-        for (Player player:cardGame.players) {
-            //assertEquals(false,player.running);
-        }
-
-        assertEquals(false, running.get(cardGame));
-    }
-
     @Test
     public void testGetDecks() {
         cardGame.decks = cardGame.getDecks();
 
         //ensure the method has filled 'decks' with 4 decks
-        assertEquals(cardGame.decks.length, cardGame.numberOfPlayers);
+        Assert.assertEquals(cardGame.decks.length, cardGame.numberOfPlayers);
 
     }
 
@@ -77,7 +61,7 @@ public class CardGameTest {
         cardGame.players = cardGame.getPlayers();
 
         //ensure the method has filled 'players' with 4 players
-        assertEquals(cardGame.players.length, cardGame.numberOfPlayers);
+        Assert.assertEquals(cardGame.players.length, cardGame.numberOfPlayers);
     }
 
     @Test
@@ -93,6 +77,13 @@ public class CardGameTest {
 
         assertEquals(cards.get(cardGame.decks[0]),expectedCards);
 
+    }
+
+    @Test
+    public void testIncrementFinishedPlayers() {
+        cardGame.incrementFinishedPlayers();
+
+        assertEquals(1,cardGame.finishedPlayers.get());
     }
 
 

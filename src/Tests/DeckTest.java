@@ -1,8 +1,12 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
@@ -13,7 +17,9 @@ public class DeckTest {
 
     @Before
     public void setUp() {
+
         deck = new Deck(1);
+
     }
 
     @Test
@@ -38,10 +44,21 @@ public class DeckTest {
     }
 
     @Test
-    public void testHasCardsEmpty() {
+    public void testHasCardsFalse() {
+
         assertEquals(false,deck.hasCards());
+
     }
 
+    @Test
+    public void testHasCardsTrue() {
+        ArrayList<Card> arrayList = new ArrayList<>();
+        arrayList.add(new Card(1));
+
+        deck.setCardsInDeck(arrayList);
+        assertEquals(true,deck.hasCards());
+
+    }
 
     @Test
     public void testAddCard() {
@@ -50,5 +67,31 @@ public class DeckTest {
         deck.addCard(card1);
 
         assertEquals(true,deck.hasCards());
+    }
+
+    @Test
+    public void testWriteToFile() {
+        Card[] cards = {new Card(2),new Card(2),new Card(2),new Card(2)};
+        ArrayList<Card> arrCards = new ArrayList<>();
+        arrCards.addAll(Arrays.asList(cards));
+
+        deck.setCardsInDeck(arrCards);
+
+        deck.writeToFile();
+
+        String readin = "";
+
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(new File("src/Assets/deck1_output.txt")));
+            readin = in.readLine();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String expected = "Final cards left in deck: 2 2 2 2 ";
+
+        assertEquals(true, expected.equals(readin));
+
     }
 }

@@ -43,13 +43,14 @@ public class Player implements Runnable{
         //Check if initial hand is a winning hand.
         checkDeck();
 
-        //while the game is still running, keep having turns
+        //while the game is still running, keep having turns.
         while (cardGame.gameRunning.get()) {
             haveTurn();
         }
 
         cardGame.incrementFinishedPlayers();
 
+        //Wait till the cardGame notifies it to continue.
         synchronized (this) {
             try {
                 this.wait();
@@ -59,7 +60,7 @@ public class Player implements Runnable{
             }
         }
 
-        //Catch up to the player who had the most turns
+        //Catch up to the player who had the most turns.
         turnsAllowed = cardGame.turnsAllowed;
 
         while (turnsHad < turnsAllowed) {
@@ -77,6 +78,15 @@ public class Player implements Runnable{
 
     }
 
+
+    /*
+    * This method is a 'turn' for a player, it makes the player;
+    *   - Draw a card
+    *   - Discard a card
+    *   - Check for a winning hand
+    * However this only occurs if the deck to the left of the player contains any cards
+    * and if the lock on that deck has been released by all other players.
+    * */
     public void haveTurn() {
         if (leftDeck.hasCards()) {
             if (leftDeck.deckLock.tryLock()) {
@@ -91,18 +101,16 @@ public class Player implements Runnable{
 
     /*
     * A method to check the current player's hand, if a winning deck is held
-    * the method calls a method from the CardGame class.
+    * the method sets the CardGame's 'gameRunning' variable to false and the 'winner' to the current player.
     * However, if the player doesn't hold a winning hand it writes the current hand to the fileOutput.
     * */
     public void checkDeck() {
-        //if the game is running, and they have won, finish up
+        //if the game is running, and they have won, start ending game.
         if (cardGame.gameRunning.get() && hasWinningDeck()) {
-//            cardGame.incrementFinishedPlayers();
             cardGame.winner = this;
             cardGame.gameRunning.set(false);
             fileOutput.add(name + " wins");
         } else {
-            //the game is not running, so just write hand and do not check for win
             writeHandToFile();
         }
     }
@@ -110,7 +118,7 @@ public class Player implements Runnable{
     /*
     * This method counts the number of cards that match the player number.
     * If the player holds more than 4 cards of the same value as the player number then
-    * it returns true otherwise it returns false.
+    * @return Returns boolean depending on if the current hand is a 'winning hand'.
     * */
     public boolean hasWinningDeck() {
         boolean won = false;
@@ -125,6 +133,7 @@ public class Player implements Runnable{
 
     /*
     * Used when dealing cards to add a card to the players hand.
+    * @return Returns boolean depending on if adding was successful.
     * */
     public boolean addCard(Card card) {
         if (cards.size() < 4) {
@@ -149,7 +158,7 @@ public class Player implements Runnable{
 
     /*
     * This method removes a card from the player's current hand.
-    * The removed card can't be one that the player perfers.
+    * The removed card can't be one that the player prefers.
     * Of the cards that the player doesn't prefer it picks one at random to discard to the
     * deck on the player's right side.
     * */
@@ -179,7 +188,7 @@ public class Player implements Runnable{
     }
 
     /*
-    * Method to add to the fileOutput the game starting strings.
+    * Method to add to the fileOutput the initial starting strings.
     * */
     public void initialWriteToFile () {
         String msg = name + " initial hand: ";
@@ -192,7 +201,7 @@ public class Player implements Runnable{
 
 
     /*
-     * Method to add to the fileOutput the game ending strings.
+     * Method to add to the fileOutput the final ending strings.
      * */
     public void finalWriteToFile() {
         String msg = name + " final hand: ";
@@ -222,7 +231,7 @@ public class Player implements Runnable{
 
 
     /*
-     * Method to write every part in the fileOutput arraylist to a line in the output textfile.
+     * Method to write every part in the fileOutput ArrayList to a line in the output text file.
      * */
     private void writeToFile() {
         try {
@@ -236,6 +245,9 @@ public class Player implements Runnable{
             e.printStackTrace();
         }
     }
+
+
+
 
 
     public Deck getLeftDeck() {

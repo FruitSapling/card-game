@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,13 +13,13 @@ public class CardGame {
     public Deck[] decks;
 
     public int turnsAllowed;
-    private AtomicInteger finishedPlayers = new AtomicInteger(0);
+    public AtomicInteger finishedPlayers = new AtomicInteger(0);
     public AtomicBoolean gameRunning = new AtomicBoolean(true);
 
     /*
     * A method to get the user to specify how many players are playing in the current game.
     * This method makes sure that the inputted value is an integer and if it isn't then it calls itself recursively.
-    * Otherwise it returns the inputted numbers,
+    * @return Returns the inputted number as an integer.
     * */
     public int getNumPlayers() {
         String errorMessage = "Please enter a valid number of players (1 to n, where n is a positive integer).";
@@ -42,6 +41,7 @@ public class CardGame {
         }
     }
 
+
     //synchronized in case two threads attempt to simultaneously access finishedPlayers
     public synchronized void incrementFinishedPlayers() {
         finishedPlayers.incrementAndGet();
@@ -50,9 +50,9 @@ public class CardGame {
 
     /*
     * This method gets the user to input a path to an appropriate file.
-    * If the file path is valid then it reads the integer values from the pack file, checks they are valid then
-    * it creates a card for each one.
-    * It returns the arraylist of cards.
+    * If the file path is valid then it reads the integer values from the pack file,
+    * checks they are valid then it creates a card for each one.
+    * @return Returns the array of cards.
     * */
     private Card[] getPack() {
         String errorMessage = "Please enter a valid path name to the pack file.";
@@ -64,13 +64,15 @@ public class CardGame {
 
         try {
             //packFile = new File("/Users/willem/Dropbox/Uni/Term 3/ECM2414 Software Development/CA/src/Assets/packFile.txt");
-            packFile = new File("C:/Users/bobby/Documents/University/Year 2/ECM2414 - Software Development/CA/card-game/src/Assets/packFileRandom.txt");
+            //packFile = new File("C:/Users/bobby/Documents/University/Year 2/ECM2414 - Software Development/CA/card-game/src/Assets/packFileRandom.txt");
+            packFile = new File(scanner.nextLine());
 
         } catch (Exception e) {
             System.out.println(errorMessage);
             return getPack();
         }
 
+        //Four cards for each player and each deck.
         Card[] cards = new Card[numberOfPlayers*8];
 
         try {
@@ -89,8 +91,7 @@ public class CardGame {
             }
 
             // if we have looped through 8*numberOfPlayers cards, and the
-            // reader is still ready, then there are too many cards in
-            // the file
+            // reader is still ready, then there are too many cards in the file.
             if (reader.readLine() != null) {
                 throw new Exception();
             }
@@ -109,7 +110,8 @@ public class CardGame {
     }
 
     /*
-    * This method creates the decks for the game.
+    * This method creates the 'n' decks for the game.
+    * @return Returns the array of 'n' decks.
     * */
     public Deck[] getDecks() {
         decks = new Deck[numberOfPlayers];
@@ -120,7 +122,8 @@ public class CardGame {
     }
 
     /*
-    * This method creates the player objects for the game.
+    * This method creates the 'n' player objects for the game.
+    * @return Returns the array of 'n' players.
     * */
     public Player[] getPlayers() {
         players = new Player[numberOfPlayers];
@@ -158,8 +161,11 @@ public class CardGame {
 
     /*
     * This method creates and starts the thread for each player object.
+    * It then does nothing until a winner is declared, at which point
+    * it allows the other players to catch up so they have all had the same number of turns.
+    * Finally, once all players have finally finished it writes the deck output files.
     * */
-    public void startGame() {
+    public void playGame() {
         playerThreads = new Thread[numberOfPlayers];
 
         for (int i = 0; i < numberOfPlayers; i++) {
@@ -209,6 +215,6 @@ public class CardGame {
         cardGame.players = cardGame.getPlayers();
         cardGame.dealCards();
 
-        cardGame.startGame();
+        cardGame.playGame();
     }
 }

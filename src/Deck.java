@@ -20,16 +20,11 @@ public class Deck {
         this.outputFile = new File("src/Assets/deck" + deckNumber + "_output.txt");
     }
 
-    public Deck(int deckNumber, Card[] cards) {
-        this.cardsInDeck = new ArrayList<>(Arrays.asList(cards));
-        this.deckNumber = deckNumber;
-        this.outputFile = new File("src/Assets/deck" + deckNumber + "_output.txt");
-        System.out.println(this.cardsInDeck);
-    }
-
 
     public void addCard(Card card) {
+
         this.cardsInDeck.add(card);
+
     }
 
 
@@ -38,10 +33,8 @@ public class Deck {
     * It either returns the first card that has a value that matches the player's preferred value,
     * or it returns the first card in the deck. Before then removing the returned card from the current deck.
     *
-    * PARAMS:
-    *   - preferredValue - The player's preferred value which is the same as the player number to look for.
-    * RETURNS:
-    *   - Card - A card from the current deck.
+    * @param preferredValue - The player's preferred value which is the same as the player number to look for.
+    * @return Card - A card from the current deck.
     * */
     public Card removeCard(int preferredValue) {
 
@@ -80,6 +73,11 @@ public class Deck {
             e.printStackTrace();
         }
     }
+
+
+
+
+
 
     public ArrayList<Card> getCardsInDeck() {
         return cardsInDeck;

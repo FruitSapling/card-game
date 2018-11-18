@@ -18,6 +18,10 @@ public class Card {
         return String.valueOf(this.getValue());
     }
 
+
+    /*
+     * Written an override equals() method to make testing the card values easier in our testing suite.
+     * */
     @Override
     public boolean equals(Object o) {
         if (((Card) o).getValue() == this.getValue()) return true;
