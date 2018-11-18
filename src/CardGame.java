@@ -63,8 +63,6 @@ public class CardGame {
         File packFile;
 
         try {
-            //packFile = new File("/Users/willem/Dropbox/Uni/Term 3/ECM2414 Software Development/CA/src/Assets/packFile.txt");
-            //packFile = new File("C:/Users/bobby/Documents/University/Year 2/ECM2414 - Software Development/CA/card-game/src/Assets/packFileRandom.txt");
             packFile = new File(scanner.nextLine());
 
         } catch (Exception e) {
@@ -158,6 +156,18 @@ public class CardGame {
         }
     }
 
+    /*
+    * This method calls other methods which are needed to set the game up
+     */
+
+    public void setupGame() {
+        numberOfPlayers = getNumPlayers();
+        pack = getPack();
+        decks = getDecks();
+        players = getPlayers();
+        dealCards();
+    }
+
 
     /*
     * This method creates and starts the thread for each player object.
@@ -166,6 +176,9 @@ public class CardGame {
     * Finally, once all players have finally finished it writes the deck output files.
     * */
     public void playGame() {
+
+        this.setupGame();
+
         playerThreads = new Thread[numberOfPlayers];
 
         for (int i = 0; i < numberOfPlayers; i++) {
@@ -174,7 +187,7 @@ public class CardGame {
             thread.start();
         }
 
-        while (gameRunning.get() || finishedPlayers.get() != 4) {
+        while (gameRunning.get() || finishedPlayers.get() != numberOfPlayers) {
 
         }
 
@@ -196,7 +209,7 @@ public class CardGame {
         }
 
         //Wait till the players are finished again
-        while (finishedPlayers.get() != 4) {
+        while (finishedPlayers.get() != numberOfPlayers) {
 
         }
 
@@ -209,12 +222,6 @@ public class CardGame {
 
     public static void main(String[] args) {
         CardGame cardGame = new CardGame();
-        cardGame.numberOfPlayers = cardGame.getNumPlayers();
-        cardGame.pack = cardGame.getPack();
-        cardGame.decks = cardGame.getDecks();
-        cardGame.players = cardGame.getPlayers();
-        cardGame.dealCards();
-
         cardGame.playGame();
     }
 }

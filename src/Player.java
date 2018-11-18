@@ -50,7 +50,7 @@ public class Player implements Runnable{
 
         cardGame.incrementFinishedPlayers();
 
-        //Wait till the cardGame notifies it to continue.
+        //Wait until the cardGame notifies it to continue.
         synchronized (this) {
             try {
                 this.wait();
@@ -80,7 +80,7 @@ public class Player implements Runnable{
 
 
     /*
-    * This method is a 'turn' for a player, it makes the player;
+    * This method is a 'turn' for a player, it makes the player:
     *   - Draw a card
     *   - Discard a card
     *   - Check for a winning hand
