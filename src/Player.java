@@ -23,7 +23,7 @@ public class Player implements Runnable{
         this.rightDeck = rightDeck;
         this.cardGame = cardGame;
         this.name = "Player " + playerNumber;
-        this.outputFile = new File("src/Assets/player" + playerNumber + "_output.txt");
+        this.outputFile = new File("player" + playerNumber + "_output.txt");
     }
 
     public Player(int playerNumber, Deck leftDeck, Deck rightDeck) {
@@ -31,7 +31,7 @@ public class Player implements Runnable{
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
         this.name = "Player " + playerNumber;
-        this.outputFile = new File("src/Assets/player" + playerNumber + "_output.txt");
+        this.outputFile = new File("player" + playerNumber + "_output.txt");
     }
 
     @Override

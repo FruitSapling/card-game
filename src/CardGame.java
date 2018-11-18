@@ -100,7 +100,7 @@ public class CardGame {
         } catch (Exception e) {
             System.out.println("There was an error while parsing your file. " +
                     "Please ensure it is a text file with 8n lines, each " +
-                    "containing a positive integer between 0 and n.");
+                    "containing a positive integer");
             return getPack();
         }
 

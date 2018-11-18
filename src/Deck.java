@@ -17,7 +17,7 @@ public class Deck {
     public Deck(int deckNumber) {
         this.deckNumber = deckNumber;
         this.deckLock = new ReentrantLock();
-        this.outputFile = new File("src/Assets/deck" + deckNumber + "_output.txt");
+        this.outputFile = new File("deck" + deckNumber + "_output.txt");
     }
 
     public void addCard(Card card) {
